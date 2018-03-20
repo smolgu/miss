@@ -1,0 +1,281 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "models.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/auth/vk": {
+      "get": {
+        "summary": "Sends a greeting",
+        "operationId": "VkAuth",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/modelsVkAuthReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "vk_token",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Love"
+        ]
+      }
+    },
+    "/api/v1/users/{user_id}": {
+      "get": {
+        "summary": "User return user info by their id",
+        "operationId": "User",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/modelsUserReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Love"
+        ]
+      }
+    },
+    "/api/v1/users/{user_id}/vote": {
+      "post": {
+        "summary": "Vote vote for user",
+        "operationId": "Vote",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/modelsVoteReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Love"
+        ]
+      }
+    },
+    "/api/v1/voting/profiles": {
+      "get": {
+        "summary": "User return list of users",
+        "operationId": "RandomUsers",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/modelsUsersReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "min_age",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "max_age",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "sex",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "Woman",
+              "Man"
+            ],
+            "default": "Woman"
+          }
+        ],
+        "tags": [
+          "Love"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ErrorErrorCode": {
+      "type": "string",
+      "enum": [
+        "good"
+      ],
+      "default": "good"
+    },
+    "modelsError": {
+      "type": "object",
+      "properties": {
+        "has_error": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "error": {
+          "type": "string"
+        },
+        "error_code": {
+          "$ref": "#/definitions/ErrorErrorCode"
+        }
+      }
+    },
+    "modelsImage": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "hash_version": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "modelsSex": {
+      "type": "string",
+      "enum": [
+        "Woman",
+        "Man"
+      ],
+      "default": "Woman"
+    },
+    "modelsUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "sex": {
+          "$ref": "#/definitions/modelsSex"
+        },
+        "group_id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/modelsImage"
+          }
+        },
+        "messages_from_all": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "bio": {
+          "type": "string"
+        },
+        "rating": {
+          "type": "string",
+          "format": "int64"
+        },
+        "age": {
+          "type": "string",
+          "format": "int64"
+        },
+        "vk_id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "inject_tag: xorm:\"jsonb notnull default '{}' 'published_date'\""
+        }
+      }
+    },
+    "modelsUserReply": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/modelsUser"
+        },
+        "error": {
+          "$ref": "#/definitions/modelsError"
+        }
+      }
+    },
+    "modelsUsersReply": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/modelsUser"
+          }
+        }
+      }
+    },
+    "modelsVkAuthReply": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/modelsUser"
+        },
+        "error": {
+          "$ref": "#/definitions/modelsError"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "modelsVoteReply": {
+      "type": "object"
+    }
+  }
+}
