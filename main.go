@@ -10,6 +10,7 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/smolgu/miss/models"
+	"github.com/smolgu/miss/pkg/vk"
 	"google.golang.org/grpc"
 )
 
@@ -54,22 +55,57 @@ type server struct {
 }
 
 // Sends a greeting
-func (server) VkAuth(context.Context, *models.VkAuthRequest) (*models.VkAuthReply, error) {
-
-	return nil, nil
+func (server) VkAuth(_ context.Context, req *models.VkAuthRequest) (*models.VkAuthReply, error) {
+	vkAccessToken := req.GetVkToken()
+	vkID, err := vk.CheckToken(vkAccessToken)
+	if err != nil {
+		return nil, err
+	}
+	user, err := models.Users.GetByVkID(vkID)
+	if err != nil {
+		return nil, err
+	}
+	sessionID, err := models.Sessions.New(user.GetId())
+	if err != nil {
+		return nil, err
+	}
+	return &models.VkAuthReply{
+		Token: sessionID,
+	}, nil
 }
 
 // User return user info by their id
-func (server) User(context.Context, *models.UserRequest) (*models.UserReply, error) {
-	return nil, nil
+func (server) GetUser(ctx context.Context, req *models.UserRequest) (*models.User, error) {
+	userID := req.GetUserId()
+	return models.Users.Get(userID)
 }
 
 // User return list of users
-func (server) RandomUsers(context.Context, *models.RandomRequest) (*models.UsersReply, error) {
-	return nil, nil
+func (server) RandomUsers(_ context.Context, req *models.RandomRequest) (*models.UsersReply, error) {
+	userID, err := models.Sessions.Check(req.Token)
+	if err != nil {
+		return nil, err
+	}
+	users, err := models.Users.Random(userID)
+	if err != nil {
+		return nil, err
+	}
+	return &models.UsersReply{
+		Users: users,
+	}, nil
 }
 
 // Vote vote for user
-func (server) Vote(context.Context, *models.VoteRequest) (*models.VoteReply, error) {
-	return nil, nil
+func (server) Vote(_ context.Context, req *models.VoteRequest) (*models.VoteReply, error) {
+	userID, err := models.Sessions.Check(req.Token)
+	if err != nil {
+		return nil, err
+	}
+	matched, err := models.Votes.Vote(req.GetUserId(), req.VoteType, userID)
+	if err != nil {
+		return nil, err
+	}
+	return &models.VoteReply{
+		Matched: matched,
+	}, nil
 }

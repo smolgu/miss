@@ -45,7 +45,7 @@ func request_Love_VkAuth_0(ctx context.Context, marshaler runtime.Marshaler, cli
 
 }
 
-func request_Love_User_0(ctx context.Context, marshaler runtime.Marshaler, client LoveClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Love_GetUser_0(ctx context.Context, marshaler runtime.Marshaler, client LoveClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq UserRequest
 	var metadata runtime.ServerMetadata
 
@@ -67,7 +67,7 @@ func request_Love_User_0(ctx context.Context, marshaler runtime.Marshaler, clien
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "user_id", err)
 	}
 
-	msg, err := client.User(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetUser(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
@@ -89,6 +89,10 @@ func request_Love_RandomUsers_0(ctx context.Context, marshaler runtime.Marshaler
 
 }
 
+var (
+	filter_Love_Vote_0 = &utilities.DoubleArray{Encoding: map[string]int{"user_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+)
+
 func request_Love_Vote_0(ctx context.Context, marshaler runtime.Marshaler, client LoveClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq VoteRequest
 	var metadata runtime.ServerMetadata
@@ -109,6 +113,10 @@ func request_Love_Vote_0(ctx context.Context, marshaler runtime.Marshaler, clien
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "user_id", err)
+	}
+
+	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_Love_Vote_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
 	msg, err := client.Vote(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -183,7 +191,7 @@ func RegisterLoveHandlerClient(ctx context.Context, mux *runtime.ServeMux, clien
 
 	})
 
-	mux.Handle("GET", pattern_Love_User_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Love_GetUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		if cn, ok := w.(http.CloseNotifier); ok {
@@ -201,14 +209,14 @@ func RegisterLoveHandlerClient(ctx context.Context, mux *runtime.ServeMux, clien
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Love_User_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Love_GetUser_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Love_User_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Love_GetUser_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -276,7 +284,7 @@ func RegisterLoveHandlerClient(ctx context.Context, mux *runtime.ServeMux, clien
 var (
 	pattern_Love_VkAuth_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "auth", "vk"}, ""))
 
-	pattern_Love_User_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "users", "user_id"}, ""))
+	pattern_Love_GetUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "users", "user_id"}, ""))
 
 	pattern_Love_RandomUsers_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "voting", "profiles"}, ""))
 
@@ -286,7 +294,7 @@ var (
 var (
 	forward_Love_VkAuth_0 = runtime.ForwardResponseMessage
 
-	forward_Love_User_0 = runtime.ForwardResponseMessage
+	forward_Love_GetUser_0 = runtime.ForwardResponseMessage
 
 	forward_Love_RandomUsers_0 = runtime.ForwardResponseMessage
 

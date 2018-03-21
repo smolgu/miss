@@ -43,12 +43,12 @@
     "/api/v1/users/{user_id}": {
       "get": {
         "summary": "User return user info by their id",
-        "operationId": "User",
+        "operationId": "GetUser",
         "responses": {
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/modelsUserReply"
+              "$ref": "#/definitions/modelsUser"
             }
           }
         },
@@ -129,6 +129,12 @@
               "Man"
             ],
             "default": "Woman"
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -238,17 +244,6 @@
         }
       }
     },
-    "modelsUserReply": {
-      "type": "object",
-      "properties": {
-        "user": {
-          "$ref": "#/definitions/modelsUser"
-        },
-        "error": {
-          "$ref": "#/definitions/modelsError"
-        }
-      }
-    },
     "modelsUsersReply": {
       "type": "object",
       "properties": {
@@ -275,7 +270,22 @@
       }
     },
     "modelsVoteReply": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "matched": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
+    },
+    "modelsVoteType": {
+      "type": "string",
+      "enum": [
+        "none",
+        "dislike",
+        "like"
+      ],
+      "default": "none"
     }
   }
 }

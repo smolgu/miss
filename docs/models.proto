@@ -1,22 +1,9 @@
 syntax = "proto3";
 
 import "google/api/annotations.proto";
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
 
 package models;
-
-option (gogoproto.testgen_all) = true;
-option (gogoproto.populate_all) = true;
-option (gogoproto.benchgen_all) = true;
-option (gogoproto.unmarshaler_all) = false;
-option (gogoproto.marshaler_all) = false;
-option (gogoproto.sizer_all) = true;
-option (gogoproto.equal_all) = true;
-option (gogoproto.gostring_all) = true;
-option (gogoproto.verbose_equal_all) = true;
-option (gogoproto.unsafe_marshaler_all) = false;
-option (gogoproto.unsafe_unmarshaler_all) = false;
 
 enum Sex {
   Woman = 0;
@@ -37,7 +24,7 @@ message User {
   int64 vk_id = 11;
 
   // inject_tag: xorm:"jsonb notnull default '{}' 'published_date'"
-  google.protobuf.Timestamp created_at = 12 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+  google.protobuf.Timestamp created_at = 12;// [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
 }
 
 message Image {
@@ -66,6 +53,15 @@ message Error {
   ErrorCode error_code = 3;
 }
 
+message Vote {
+  // @inject_tag: storm:"index"
+  int64 target_user_id = 1;
+  // @inject_tag: storm:"index"
+  VoteType vote_type = 2;
+  // @inject_tag: storm:"index"
+  int64 voter_id = 3;
+}
+
 message VkAuthRequest {
   string vk_token = 1;
 }
@@ -89,23 +85,28 @@ message RandomRequest {
   int64 min_age = 1;
   int64 max_age = 2;
   Sex sex = 3;
+  string token = 4;
 }
 
 message UsersReply {
   repeated User users = 1;
 }
 
+
+enum VoteType {
+  none = 0;
+  dislike = 1;
+  like = 2;
+}
+
 message VoteRequest {
   int64 user_id = 1;
-  enum VoteType {
-    none = 0;
-    dislike = 1;
-    like = 2;
-  }
+  string token = 2;
+  VoteType vote_type = 3;
 }
 
 message VoteReply {
-  
+  bool matched = 1;
 }
 
 // The love service definition.
@@ -117,7 +118,7 @@ service Love {
     };
   }
   // User return user info by their id
-  rpc User (UserRequest) returns (UserReply) {
+  rpc GetUser (UserRequest) returns (User) {
     option (google.api.http) = {
       get: "/api/v1/users/{user_id}"
     };
@@ -134,4 +135,5 @@ service Love {
       post: "/api/v1/users/{user_id}/vote"
     };
   }
+
 }
