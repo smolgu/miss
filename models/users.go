@@ -30,13 +30,15 @@ func (userModel) GetByVkID(vkID int64) (*User, error) {
 	return nil, nil
 }
 
-func (um userModel) GetByVkIDOrRegister(vkID) (*User, error) {
+func (um userModel) GetByVkIDOrRegister(vkID int64) (*User, error) {
 	user, err := um.GetByVkID(vkID)
 	if err != nil {
 		if err != errors.NotFound {
-			return err
+			return nil, err
 		}
 	}
+	_ = user
+
 	return nil, nil
 }
 

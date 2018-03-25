@@ -10,14 +10,40 @@ import (
 	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/smolgu/miss/models"
-	"github.com/smolgu/miss/pkg/vk"
+	"github.com/urfave/cli"
 	"google.golang.org/grpc"
+
+	"github.com/smolgu/miss/models"
+	"github.com/smolgu/miss/pkg/setting"
+	"github.com/smolgu/miss/pkg/vk"
 )
 
 func main() {
+	app := &cli.App{
+		Action: run,
+		Flags: []cli.Flag{
+			cli.BoolFlag{
+				Name: "dev",
+			},
+			cli.StringFlag{
+				Name:  "config",
+				Value: "conf/app.yaml",
+			},
+		},
+	}
 
-	err := models.NewContext()
+	app.Run(os.Args)
+}
+
+func run(ctx *cli.Context) {
+	setting.Dev = ctx.Bool("dev")
+
+	err := setting.NewContext(ctx.String("config"))
+	if err != nil {
+		log.Fatalf("err setting.NewContext: %s", err)
+	}
+
+	err = models.NewContext()
 	if err != nil {
 		log.Fatalf("err models.NewContext: %s", err)
 	}
@@ -51,7 +77,7 @@ func runProxy() {
 		return
 	}
 
-	if err := http.ListenAndServe(":"+os.Getenv("PORT"), mux); err != nil {
+	if err := http.ListenAndServe(":8080", mux); err != nil {
 		panic(err)
 	}
 }

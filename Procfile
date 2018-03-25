@@ -1,1 +1,1 @@
-web: miss
+web: miss -config=/data/conf/app.yaml

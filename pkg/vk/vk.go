@@ -30,12 +30,12 @@ func userGet(token string, withAvatarURL bool) (user vkutil.User, err error) {
 }
 
 // CheckToken return user id of vk.com user
-func CheckToken(token string) (int, error) {
+func CheckToken(token string) (int64, error) {
 	user, err := userGet(token, true)
 	if err != nil {
 		return 0, err
 	}
-	return int(user.Id), nil
+	return int64(user.Id), nil
 }
 
 // GetAvatarURL return user's avatar
@@ -45,8 +45,4 @@ func GetAvatarURL(token string) (string, error) {
 		return "", err
 	}
 	return u.Photo200, nil
-}
-
-func GetUserInfo() (vkutil.User, error) {
-
 }
