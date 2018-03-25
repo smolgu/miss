@@ -1,34 +1,56 @@
 package models
 
-import (
-	"github.com/asdine/storm/q"
-)
+import "ug/errors"
 
 type userModel int
 
 var Users userModel
+
+func (u User) TableName() string {
+	return "users"
+}
+
+func (u User) ObjectType() ObjectType {
+	return ObjectType_ObjectUser
+}
 
 func (userModel) Get(userID int64) (*User, error) {
 	return nil, nil
 }
 
 func (userModel) GetByVkID(vkID int64) (*User, error) {
+	var u User
+	has, err := db.Where("vk_id = ?", vkID).Get(&u)
+	if err != nil {
+		return nil, err
+	}
+	if !has {
+		return nil, errors.NotFound
+	}
+	return nil, nil
+}
+
+func (um userModel) GetByVkIDOrRegister(vkID) (*User, error) {
+	user, err := um.GetByVkID(vkID)
+	if err != nil {
+		if err != errors.NotFound {
+			return err
+		}
+	}
 	return nil, nil
 }
 
 func (userModel) Random(voterID int64) (res []*User, err error) {
-	var votes []Vote
-	err = stormDB.Select(q.Eq("VoterId", voterID)).Find(&votes)
-	if err != nil {
-		return
-	}
-	var ids []int64
-	for _, v := range votes {
-		ids = append(ids, v.TargetUserId)
-	}
-	err = stormDB.Select(q.Not(q.In("ID", ids))).Find(&res)
-	if err != nil {
-		return
-	}
+	err = db.SQL(`SELECT *
+FROM users
+WHERE
+  id NOT IN (
+		SELECT target_id
+		FROM votes
+		WHERE voter_id = ?
+	)
+OREDER BY random()
+LIMIT 10
+`, voterID).Find(&res)
 	return
 }

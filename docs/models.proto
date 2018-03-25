@@ -23,8 +23,8 @@ message User {
   int64 age = 10;
   int64 vk_id = 11;
 
-  // inject_tag: xorm:"jsonb notnull default '{}' 'published_date'"
-  google.protobuf.Timestamp created_at = 12;// [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+  // inject_tag: xorm:"jsonb notnull default '{}' 'created_at'"
+  google.protobuf.Timestamp created_at = 12;
 }
 
 message Image {
@@ -44,15 +44,6 @@ message Message {
   int64 sender_id = 3;
 }
 
-message Error {
-  bool has_error = 1;
-  string error = 2;
-  enum ErrorCode {
-    good = 0;
-  }
-  ErrorCode error_code = 3;
-}
-
 message Vote {
   // @inject_tag: storm:"index"
   int64 target_user_id = 1;
@@ -68,7 +59,6 @@ message VkAuthRequest {
 
 message VkAuthReply {
   User user = 1;
-  Error error = 2;
   string token = 3;
 }
 
@@ -78,7 +68,6 @@ message UserRequest {
 
 message UserReply {
   User user = 1;
-  Error error = 2;
 }
 
 message RandomRequest {
@@ -107,6 +96,18 @@ message VoteRequest {
 
 message VoteReply {
   bool matched = 1;
+}
+
+enum ObjectType {
+  ObjectNone = 0;
+  ObjectUser = 1;
+  ObjectVote = 2;
+  ObjectMessage = 3;
+}
+
+enum ErrorCode {
+  ErrorNone = 0;
+  NotFound = 1;
 }
 
 // The love service definition.

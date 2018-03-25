@@ -15,6 +15,12 @@ import (
 )
 
 func main() {
+
+	err := models.NewContext()
+	if err != nil {
+		log.Fatalf("err models.NewContext: %s", err)
+	}
+
 	go runGRPCServer()
 	time.Sleep(1 * time.Second)
 	runProxy()
