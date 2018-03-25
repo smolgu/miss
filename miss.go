@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -50,7 +51,7 @@ func runProxy() {
 		return
 	}
 
-	if err := http.ListenAndServe(":8080", mux); err != nil {
+	if err := http.ListenAndServe(":"+os.Getenv("PORT"), mux); err != nil {
 		panic(err)
 	}
 }

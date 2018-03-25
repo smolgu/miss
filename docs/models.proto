@@ -10,6 +10,29 @@ enum Sex {
   Man = 1;
 }
 
+enum Faculty {
+  none = 0;
+  FMF = 1;
+  EGF = 2;
+  FIP = 3;
+  FF = 4;
+  HGF = 5;
+  FU = 6;
+}
+
+message TrainingDirection {
+  int64 id = 1;
+  string title = 2;
+  string short_name_template = 3;
+}
+
+message Group {
+  int64 id = 1;
+  Faculty faculty = 2;
+  int64 start_year = 3;
+  int64 training_direction = 4;
+}
+
 message User {
   int64 id = 1;
   string first_name = 2;
@@ -35,6 +58,7 @@ message Image {
 }
 
 message Dialog {
+  // inject_tag: xorm:"unique index"
   string id = 1;
 }
 

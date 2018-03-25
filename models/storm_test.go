@@ -14,10 +14,11 @@ type TestStruct struct {
 
 func TestNotIn(t *testing.T) {
 	t.Run("Open", func(t *testing.T) {
-		db, err := storm.Open("/tmp/test.storm")
+		db, err := storm.Open("./test.storm")
 		if err != nil {
 			t.Fatal(err)
 		}
+		defer os.Remove("./test.storm")
 
 		for i := 1; i < 16; i++ {
 			ts := TestStruct{
@@ -43,7 +44,6 @@ func TestNotIn(t *testing.T) {
 			}
 		}
 
-		defer os.Remove("/tmp/test.storm")
 	})
 
 }
