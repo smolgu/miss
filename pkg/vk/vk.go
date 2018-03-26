@@ -1,6 +1,7 @@
 package vk
 
 import (
+	"fmt"
 	"net/url"
 
 	"github.com/zhuharev/vkutil"
@@ -23,13 +24,13 @@ func GetUser(token string, vkID int64, withAvatars ...bool) (user vkutil.User, e
 	}
 	res, err = u.UsersGet(vkID, params)
 	if err != nil {
-		err = errors.New("ошибка соединения с ВКонтакте. Попробуйте позже",
-			err.Error())
+		err = errors.New(fmt.Errorf("ошибка соединения с ВКонтакте. Попробуйте позже"),
+			err)
 		return
 	}
 	if len(res) != 1 {
-		err = errors.New("ошибка авторизации во ВКонтакте. Попробуйте позже",
-			err.Error())
+		err = errors.New(fmt.Errorf("ошибка авторизации во ВКонтакте. Попробуйте позже"),
+			err)
 		return
 	}
 	return res[0], nil

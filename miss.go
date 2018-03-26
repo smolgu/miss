@@ -8,13 +8,13 @@ import (
 	"net/http"
 	"os"
 	"time"
-	"ug/errors"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/urfave/cli"
 	"google.golang.org/grpc"
 
 	"github.com/smolgu/miss/models"
+	"github.com/smolgu/miss/pkg/errors"
 	"github.com/smolgu/miss/pkg/setting"
 	"github.com/smolgu/miss/pkg/vk"
 )
@@ -37,6 +37,9 @@ func main() {
 }
 
 func run(ctx *cli.Context) {
+
+	log.SetFlags(log.Lshortfile | log.LstdFlags)
+
 	setting.Dev = ctx.Bool("dev")
 
 	err := setting.NewContext(ctx.String("config"))
