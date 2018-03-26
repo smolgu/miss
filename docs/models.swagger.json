@@ -144,28 +144,6 @@
     }
   },
   "definitions": {
-    "ErrorErrorCode": {
-      "type": "string",
-      "enum": [
-        "good"
-      ],
-      "default": "good"
-    },
-    "modelsError": {
-      "type": "object",
-      "properties": {
-        "has_error": {
-          "type": "boolean",
-          "format": "boolean"
-        },
-        "error": {
-          "type": "string"
-        },
-        "error_code": {
-          "$ref": "#/definitions/ErrorErrorCode"
-        }
-      }
-    },
     "modelsImage": {
       "type": "object",
       "properties": {
@@ -240,7 +218,10 @@
         "created_at": {
           "type": "string",
           "format": "date-time",
-          "title": "inject_tag: xorm:\"jsonb notnull default '{}' 'published_date'\""
+          "title": "inject_tag: xorm:\"jsonb notnull default '{}' 'created_at'\""
+        },
+        "avatar_url": {
+          "type": "string"
         }
       }
     },
@@ -261,9 +242,6 @@
         "user": {
           "$ref": "#/definitions/modelsUser"
         },
-        "error": {
-          "$ref": "#/definitions/modelsError"
-        },
         "token": {
           "type": "string"
         }
@@ -281,11 +259,11 @@
     "modelsVoteType": {
       "type": "string",
       "enum": [
-        "none",
+        "vote_none",
         "dislike",
         "like"
       ],
-      "default": "none"
+      "default": "vote_none"
     }
   }
 }
