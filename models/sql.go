@@ -27,22 +27,30 @@ func NewContext() (err error) {
 		}
 	}
 
-	err = db.Sync2(&userVoteModel{})
+	err = db.Sync2(
+		new(userVoteModel),
+		new(User),
+	)
 	if err != nil {
 		return pkgErrors.Wrap(err, "sync2 (migration)")
+	}
+
+	err = checkInstall()
+	if err != nil {
+		return pkgErrors.Wrap(err, "create admin user")
 	}
 
 	return
 }
 
 func checkInstall() error {
-	user, err := Users.Get(1)
+	_, err := Users.Get(1)
 	if err != nil {
-		if errors.CheckTyped(err, errors.ErrNotFound) {
+		if !errors.CheckTyped(err, errors.ErrNotFound) {
 			return err
 		}
 	}
-	user = &User{
+	user := &User{
 		FirstName:       "Администратор",
 		MessagesFromAll: true,
 	}

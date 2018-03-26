@@ -1,6 +1,7 @@
 package setting
 
 import (
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -38,6 +39,11 @@ func NewContext(configFilePaths ...string) (err error) {
 	dec := yaml.NewDecoder(f)
 	err = dec.Decode(&App)
 	if err != nil {
+		data, err := ioutil.ReadFile(cnfFilePath)
+		if err != nil {
+			return errors.Wrap(err, "ioutil.ReadFile")
+		}
+		log.Printf("cnf data: %s", data)
 		return errors.Wrap(err, "decode config file")
 	}
 	log.Printf("setting: vk_service_token: %s", App.Vk.ServiceToken)
