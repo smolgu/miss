@@ -19,12 +19,11 @@ func FormatValidatorError(err error) error {
 			return verr
 		}
 		return GetValidationError(verr[0].Field(), verr[0].Tag())
-	} else {
-		return fmt.Errorf("cannot cast error %+v", err)
 	}
-	return err
+	return fmt.Errorf("cannot cast error %+v", err)
 }
 
+// GetValidationError returns error if exists
 func GetValidationError(fieldName string, tag string) error {
 	return fmt.Errorf(errMap[tag], russianFieldTranslate(fieldName))
 }

@@ -67,11 +67,12 @@ message Dialog {
 }
 
 message Message {
-  string dialog_id = 1;
-  string text = 2;
-  int64 sender_id = 3;
+  int64 id = 1;
+  string dialog_id = 2;
+  string text = 3;
+  int64 sender_id = 4;
   // @inject_tag: xorm:"jsonb notnull default '{}'::jsonb 'created_at'"
-  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp created_at = 5;
 }
 
 message Vote {
@@ -129,6 +130,16 @@ message VoteReply {
   bool matched = 1;
 }
 
+message DialogsRequest {
+  string token = 1;
+  int64 offset = 2;
+  int64 limit = 3;
+}
+
+message DialogsReply {
+  repeated Dialog dialogs = 1;
+}
+
 enum ObjectType {
   ObjectNone = 0;
   ObjectUser = 1;
@@ -168,5 +179,10 @@ service Love {
       post: "/api/v1/users/{user_id}/vote"
     };
   }
-
+  // Vote vote for user
+  rpc GetDialogs (DialogsRequest) returns (DialogsReply) {
+    option (google.api.http) = {
+      get: "/api/v1/dialogs"
+    };
+  }
 }

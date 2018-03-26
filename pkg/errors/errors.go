@@ -52,6 +52,14 @@ func CheckTyped(err error, typed error) bool {
 	return reflect.DeepEqual(err, typed)
 }
 
+// Sprint check is err Error and print dev msg
+func Sprint(err error) string {
+	if e, ok := err.(*Error); ok && e.devMsg != nil {
+		return e.devMsg.Error()
+	}
+	return err.Error()
+}
+
 // func IsZeroOfUnderlyingType(x interface{}) bool {
 // 	return reflect.DeepEqual(x, reflect.Zero(reflect.TypeOf(x)).Interface())
 // }

@@ -28,6 +28,8 @@ func NewContext() (err error) {
 		}
 	}
 
+	//db.DropTables(new(User), new(Message))
+
 	err = db.Sync2(
 		new(userVoteModel),
 		new(User),

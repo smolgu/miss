@@ -171,3 +171,18 @@ func (server) Vote(_ context.Context, req *models.VoteRequest) (*models.VoteRepl
 		Matched: matched,
 	}, nil
 }
+
+func (server) GetDialogs(_ context.Context, req *models.DialogsRequest) (*models.DialogsReply, error) {
+	userID, err := models.Sessions.Check(req.Token)
+	if err != nil {
+		log.Printf("session check %v", errors.Sprint(err))
+		return nil, err
+	}
+	dialogs, err := models.Dialogs.Dialogs(userID)
+	if err != nil {
+		return nil, err
+	}
+	return &models.DialogsReply{
+		Dialogs: dialogs,
+	}, nil
+}

@@ -40,6 +40,45 @@
         ]
       }
     },
+    "/api/v1/dialogs": {
+      "get": {
+        "summary": "Vote vote for user",
+        "operationId": "GetDialogs",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/modelsDialogsReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Love"
+        ]
+      }
+    },
     "/api/v1/users/{user_id}": {
       "get": {
         "summary": "GetUser возвращает информацию о пользователе по его ID",
@@ -145,6 +184,33 @@
     }
   },
   "definitions": {
+    "modelsDialog": {
+      "type": "object",
+      "properties": {
+        "parcipant_id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "last_message": {
+          "$ref": "#/definitions/modelsMessage"
+        },
+        "readed": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
+    },
+    "modelsDialogsReply": {
+      "type": "object",
+      "properties": {
+        "dialogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/modelsDialog"
+          }
+        }
+      }
+    },
     "modelsImage": {
       "type": "object",
       "properties": {
@@ -164,6 +230,30 @@
         "ratio": {
           "type": "number",
           "format": "float"
+        }
+      }
+    },
+    "modelsMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "dialog_id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "sender_id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "@inject_tag: xorm:\"jsonb notnull default '{}'::jsonb 'created_at'\""
         }
       }
     },

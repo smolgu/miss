@@ -23,7 +23,7 @@ func (dialogModel) Get(dialogID string) (*Dialog, error) {
 }
 
 type dbDialog struct {
-	ID          string `xorm:"unique"`
+	ID          string `xorm:"unique 'id'"`
 	Peer1       int64  `xorm:"unique(dialog_idx)"`
 	Peer2       int64  `xorm:"unique(dialog_idx)"`
 	Peer1Cursor int64  `xorm:"peer1_cursor"`
@@ -34,7 +34,6 @@ type viewDialog struct {
 	ID        string `xorm:"unique"`
 	Peer1     int64  `xorm:"unique(dialog_idx)"`
 	Peer2     int64  `xorm:"unique(dialog_idx)"`
-	Readed    bool   `xorm:"readed"`
 	Text      string
 	SenderID  int64                `xorm:"sender_id"`
 	CreatedAt *timestamp.Timestamp `xorm:"created_at"`
@@ -82,13 +81,12 @@ func (dialogModel) Create(peer1, peer2 int64) error {
 	return nil
 }
 
-func (dialogModel) Dialogs(userID int64) (dialogs []Dialog, err error) {
+func (dialogModel) Dialogs(userID int64) (dialogs []*Dialog, err error) {
 	var dbDialogs []viewDialog
 	sql := `SELECT
   dialogs.id,
   peer1,
   peer2,
-  readed,
   text,
   sender_id,
   created_at,
@@ -96,8 +94,8 @@ func (dialogModel) Dialogs(userID int64) (dialogs []Dialog, err error) {
 FROM dialogs
 LEFT JOIN messages
   ON messages.dialog_id = dialogs.id
-WHERE peer1 = ?0
-   OR peer2 = ?0
+WHERE peer1 = $1
+   OR peer2 = $1
 ORDER BY
   messages.id desc
 `
@@ -109,10 +107,10 @@ ORDER BY
 	return viewDialogsToDialogs(userID, dbDialogs), nil
 }
 
-func viewDialogsToDialogs(userID int64, viewDialogs []viewDialog) []Dialog {
-	res := make([]Dialog, len(viewDialogs))
+func viewDialogsToDialogs(userID int64, viewDialogs []viewDialog) []*Dialog {
+	res := make([]*Dialog, len(viewDialogs))
 	for i, dbDialog := range viewDialogs {
-		d := Dialog{
+		d := &Dialog{
 			ParcipantId: dbDialog.Parcipant(userID),
 			LastMessage: &Message{
 				DialogId:  dbDialog.ID,
@@ -120,7 +118,7 @@ func viewDialogsToDialogs(userID int64, viewDialogs []viewDialog) []Dialog {
 				SenderId:  dbDialog.SenderID,
 				CreatedAt: dbDialog.CreatedAt,
 			},
-			Readed: viewDialogs[i].Readed,
+			//	Readed: viewDialogs[i].Readed,
 		}
 		res[i] = d
 	}
