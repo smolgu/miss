@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-playground/validator"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/urfave/cli"
 	"google.golang.org/grpc"
@@ -138,6 +139,11 @@ func (server) GetUser(ctx context.Context, req *models.UserRequest) (*models.Use
 
 // User return list of users
 func (server) RandomUsers(_ context.Context, req *models.RandomRequest) (*models.UsersReply, error) {
+	validate := validator.New()
+	errs := validate.Struct(req)
+	if errs != nil {
+		return nil, errors.FormatValidatorError(errs)
+	}
 	userID, err := models.Sessions.Check(req.Token)
 	if err != nil {
 		return nil, err

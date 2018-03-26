@@ -1,6 +1,9 @@
 package models
 
 import (
+	"fmt"
+
+	pkgErrors "github.com/pkg/errors"
 	"github.com/zhuharev/vkutil"
 
 	"github.com/smolgu/miss/pkg/errors"
@@ -19,7 +22,15 @@ func (u User) ObjectType() ObjectType {
 }
 
 func (userModel) Get(userID int64) (*User, error) {
-	return nil, nil
+	user := new(User)
+	has, err := db.Id(userID).Get(user)
+	if err != nil {
+		return nil, errors.New(errors.ErrPublicUnknownError, pkgErrors.Wrapf(err, "get user from db user=%d", userID))
+	}
+	if !has {
+		return nil, errors.New(fmt.Errorf("пользователь не найден"), fmt.Errorf("not found"), errors.ErrNotFound)
+	}
+	return user, nil
 }
 
 func (userModel) GetByVkID(vkID int64) (*User, error) {
@@ -54,7 +65,7 @@ WHERE
 		FROM votes
 		WHERE voter_id = ?
 	)
-OREDER BY random()
+ORDER BY random()
 LIMIT 10
 `, voterID).Find(&res)
 	return

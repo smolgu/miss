@@ -46,7 +46,7 @@ message User {
   int64 age = 10;
   int64 vk_id = 11;
 
-  // inject_tag: xorm:"jsonb notnull default '{}' 'created_at'"
+  // @inject_tag: xorm:"jsonb notnull default '{}' 'created_at'"
   google.protobuf.Timestamp created_at = 12;
 
   string avatar_url = 13;
@@ -57,6 +57,7 @@ message Image {
   string color = 2;
   string hash = 3;
   int64 hash_version = 4;
+  float ratio = 5;
 }
 
 message Dialog {
@@ -100,6 +101,7 @@ message RandomRequest {
   int64 min_age = 1;
   int64 max_age = 2;
   Sex sex = 3;
+  // @inject_tag: validate:"required"
   string token = 4;
 }
 

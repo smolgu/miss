@@ -46,9 +46,12 @@ func NewContext() (err error) {
 func checkInstall() error {
 	_, err := Users.Get(1)
 	if err != nil {
+		log.Printf("get user: %v", err)
 		if !errors.CheckTyped(err, errors.ErrNotFound) {
 			return err
 		}
+	} else {
+		return nil
 	}
 	user := &User{
 		FirstName:       "Администратор",

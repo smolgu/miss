@@ -1,9 +1,15 @@
 package errors
 
-import "fmt"
+import (
+	"fmt"
+)
 
-// ErrNotFound describe not found error
-var ErrNotFound = fmt.Errorf("not found")
+var (
+	// ErrNotFound describe not found error
+	ErrNotFound = fmt.Errorf("not found")
+	// ErrPublicUnknownError will be displayed for end user. Its hide dev info
+	ErrPublicUnknownError = fmt.Errorf("неизвестная ошибка")
+)
 
 // New create new Error with description for user and developer
 func New(userMsg, devMsg error, typeds ...error) error {
@@ -26,7 +32,7 @@ type Error struct {
 }
 
 func (e Error) Error() string {
-	return e.devMsg.Error()
+	return e.userMsg.Error()
 }
 
 // Typed returns error with type if has. Else return himself
@@ -44,50 +50,3 @@ func CheckTyped(err error, typed error) bool {
 	}
 	return err == typed
 }
-
-//
-// import (
-// 	"fmt"
-//
-// )
-//
-// var (
-// 	notFoundFmt = "объект %v не найден"
-// )
-//
-// func New(objectType int, errorCode int, args ...interface{}) Error {
-// 	return Error{
-// 		code:       errorCode,
-// 		objectType: objectType,
-// 		args:       args,
-// 	}
-// }
-//
-// func NewNotFound(object interface{}) Error {
-// 	switch v := object.(type) {
-// 	case types.User:
-// return Error{
-//   objectType:
-//   return Error{}
-// }
-// 	}
-// }
-//
-// type Error struct {
-// 	code       int
-// 	objectType int
-// 	args       []interface{}
-// }
-//
-// func (e Error) Error() string {
-// 	switch e.code {
-// 	case int(ErrorCode_NotFound):
-// 		switch e.objectType {
-// 		case int(ObjectType_ObjectUser):
-// 			return fmt.Sprintf("Пользователь %v не найден", e.args...)
-// 		}
-// 	default:
-// 		return "неизвестная ошибка"
-// 	}
-// 	return "unknown error"
-// }
