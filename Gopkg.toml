@@ -24,10 +24,9 @@
 #   go-tests = true
 #   unused-packages = true
 
-metadata.heroku["go-version"] = "1.10"
-
 [metadata.heroku]
   root-package = "github.com/smolgu/miss"
+  go-version = "go1.10"
 
 [[constraint]]
   name = "github.com/asdine/storm"
