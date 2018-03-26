@@ -1,16 +1,19 @@
 package vk
 
 import (
-	"fmt"
 	"net/url"
 
 	"github.com/zhuharev/vkutil"
+
+	"github.com/smolgu/miss/pkg/errors"
 )
 
-func userGet(token string, withAvatarURL bool) (user vkutil.User, err error) {
+// GetUser returns info about user by id
+func GetUser(token string, vkID int64, withAvatars ...bool) (user vkutil.User, err error) {
 	var (
-		u   = vkutil.New()
-		res []vkutil.User
+		u             = vkutil.New()
+		res           []vkutil.User
+		withAvatarURL = len(withAvatars) > 0 && withAvatars[0]
 	)
 	u.VkApi.AccessToken = token
 	u.VkApi.Lang = "ru"
@@ -18,20 +21,28 @@ func userGet(token string, withAvatarURL bool) (user vkutil.User, err error) {
 	if withAvatarURL {
 		params.Set("fields", "photo_200")
 	}
-	res, err = u.UsersGet(nil, params)
+	res, err = u.UsersGet(vkID, params)
 	if err != nil {
+		err = errors.New("ошибка соединения с ВКонтакте. Попробуйте позже",
+			err.Error())
 		return
 	}
 	if len(res) != 1 {
-		err = fmt.Errorf("Token invalid")
+		err = errors.New("ошибка авторизации во ВКонтакте. Попробуйте позже",
+			err.Error())
 		return
 	}
 	return res[0], nil
 }
 
+// UserGetByToken get info about user by token
+func UserGetByToken(token string, withAvatarURL bool) (user vkutil.User, err error) {
+	return GetUser(token, 0, withAvatarURL)
+}
+
 // CheckToken return user id of vk.com user
 func CheckToken(token string) (int64, error) {
-	user, err := userGet(token, true)
+	user, err := UserGetByToken(token, true)
 	if err != nil {
 		return 0, err
 	}
@@ -40,7 +51,7 @@ func CheckToken(token string) (int64, error) {
 
 // GetAvatarURL return user's avatar
 func GetAvatarURL(token string) (string, error) {
-	u, err := userGet(token, true)
+	u, err := UserGetByToken(token, true)
 	if err != nil {
 		return "", err
 	}

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"ug/errors"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/urfave/cli"
@@ -87,17 +88,7 @@ func runProxy() {
 type server struct {
 }
 
-// Sends a greeting
-func (server) VkAuth(_ context.Context, req *models.VkAuthRequest) (*models.VkAuthReply, error) {
-	vkAccessToken := req.GetVkToken()
-	vkID, err := vk.CheckToken(vkAccessToken)
-	if err != nil {
-		return nil, err
-	}
-	user, err := models.Users.GetByVkID(vkID)
-	if err != nil {
-		return nil, err
-	}
+func (srv server) vkAuth(ctx context.Context, req *models.VkAuthRequest, user *models.User) (*models.VkAuthReply, error) {
 	sessionID, err := models.Sessions.New(user.GetId())
 	if err != nil {
 		return nil, err
@@ -105,6 +96,35 @@ func (server) VkAuth(_ context.Context, req *models.VkAuthRequest) (*models.VkAu
 	return &models.VkAuthReply{
 		Token: sessionID,
 	}, nil
+}
+
+// Sends a greeting
+func (srv server) VkAuth(ctx context.Context, req *models.VkAuthRequest) (*models.VkAuthReply, error) {
+	vkAccessToken := req.GetVkToken()
+	vkID, err := vk.CheckToken(vkAccessToken)
+	if err != nil {
+		return nil, err
+	}
+	user, err := models.Users.GetByVkID(vkID)
+	if err != nil {
+		if err == errors.NotFound {
+			return srv.VkRegistre(ctx, req)
+		}
+		return nil, err
+	}
+	return srv.vkAuth(ctx, req, user)
+}
+
+func (srv server) VkRegistre(ctx context.Context, req *models.VkAuthRequest) (*models.VkAuthReply, error) {
+	vkUser, err := vk.GetUser(req.GetVkToken(), 0, true)
+	if err != nil {
+		return nil, err
+	}
+	user, err := models.Users.CreateByVKUser(vkUser)
+	if err != nil {
+		return nil, err
+	}
+	return srv.vkAuth(ctx, req, user)
 }
 
 // User return user info by their id

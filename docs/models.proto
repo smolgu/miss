@@ -11,7 +11,7 @@ enum Sex {
 }
 
 enum Faculty {
-  none = 0;
+  faculty_none = 0;
   FMF = 1;
   EGF = 2;
   FIP = 3;
@@ -48,6 +48,8 @@ message User {
 
   // inject_tag: xorm:"jsonb notnull default '{}' 'created_at'"
   google.protobuf.Timestamp created_at = 12;
+
+  string avatar_url = 13;
 }
 
 message Image {
@@ -107,7 +109,7 @@ message UsersReply {
 
 
 enum VoteType {
-  none = 0;
+  vote_none = 0;
   dislike = 1;
   like = 2;
 }

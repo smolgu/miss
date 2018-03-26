@@ -21,6 +21,7 @@ var App struct {
 		ServiceToken string `yaml:"service_token"`
 	} `yaml:"vk"`
 	DataPath string `yaml:"data_path"`
+	Secret   string
 }
 
 // NewContext opent conf file, parse it

@@ -1,6 +1,10 @@
 package models
 
-import "ug/errors"
+import (
+	"github.com/zhuharev/vkutil"
+
+	"github.com/smolgu/miss/pkg/errors"
+)
 
 type userModel int
 
@@ -25,21 +29,20 @@ func (userModel) GetByVkID(vkID int64) (*User, error) {
 		return nil, err
 	}
 	if !has {
-		return nil, errors.NotFound
+		return nil, errors.ErrNotFound
 	}
-	return nil, nil
+	return &u, nil
 }
 
-func (um userModel) GetByVkIDOrRegister(vkID int64) (*User, error) {
-	user, err := um.GetByVkID(vkID)
-	if err != nil {
-		if err != errors.NotFound {
-			return nil, err
-		}
+func (userModel) CreateByVKUser(vkUser vkutil.User) (*User, error) {
+	user := User{
+		FirstName: vkUser.FirstName,
+		LastName:  vkUser.LastName,
+		VkId:      int64(vkUser.Id),
+		AvatarUrl: vkUser.Photo200,
 	}
-	_ = user
-
-	return nil, nil
+	_, err := db.Insert(&user)
+	return &user, err
 }
 
 func (userModel) Random(voterID int64) (res []*User, err error) {
