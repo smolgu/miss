@@ -17,7 +17,7 @@
   "paths": {
     "/api/v1/auth/vk": {
       "get": {
-        "summary": "Sends a greeting",
+        "summary": "Авторизация",
         "operationId": "VkAuth",
         "responses": {
           "200": {
@@ -42,7 +42,7 @@
     },
     "/api/v1/users/{user_id}": {
       "get": {
-        "summary": "User return user info by their id",
+        "summary": "GetUser возвращает информацию о пользователе по его ID",
         "operationId": "GetUser",
         "responses": {
           "200": {
@@ -94,7 +94,7 @@
     },
     "/api/v1/voting/profiles": {
       "get": {
-        "summary": "User return list of users",
+        "summary": "RandomUsers возвращает рандомные профили, которые ещё не лайкал текущий\nюзер",
         "operationId": "RandomUsers",
         "responses": {
           "200": {
@@ -132,6 +132,7 @@
           },
           {
             "name": "token",
+            "description": "@inject_tag: validate:\"required\".",
             "in": "query",
             "required": false,
             "type": "string"
@@ -159,6 +160,10 @@
         "hash_version": {
           "type": "string",
           "format": "int64"
+        },
+        "ratio": {
+          "type": "number",
+          "format": "float"
         }
       }
     },
@@ -218,7 +223,7 @@
         "created_at": {
           "type": "string",
           "format": "date-time",
-          "title": "inject_tag: xorm:\"jsonb notnull default '{}' 'created_at'\""
+          "title": "@inject_tag: xorm:\"jsonb notnull default '{}'::jsonb 'created_at'\""
         },
         "avatar_url": {
           "type": "string"

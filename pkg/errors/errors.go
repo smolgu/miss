@@ -2,6 +2,7 @@ package errors
 
 import (
 	"fmt"
+	"reflect"
 )
 
 var (
@@ -45,8 +46,12 @@ func (e Error) Typed() error {
 
 // CheckTyped cast err to Error and check Error.Typed == typed
 func CheckTyped(err error, typed error) bool {
-	if e, ok := err.(Error); ok {
-		return e.Typed() == typed
+	if e, ok := err.(*Error); ok {
+		return reflect.DeepEqual(e.Typed(), typed)
 	}
-	return err == typed
+	return reflect.DeepEqual(err, typed)
 }
+
+// func IsZeroOfUnderlyingType(x interface{}) bool {
+// 	return reflect.DeepEqual(x, reflect.Zero(reflect.TypeOf(x)).Interface())
+// }

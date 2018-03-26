@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 
+	"github.com/golang/protobuf/ptypes"
 	pkgErrors "github.com/pkg/errors"
 	"github.com/zhuharev/vkutil"
 
@@ -28,7 +29,7 @@ func (userModel) Get(userID int64) (*User, error) {
 		return nil, errors.New(errors.ErrPublicUnknownError, pkgErrors.Wrapf(err, "get user from db user=%d", userID))
 	}
 	if !has {
-		return nil, errors.New(fmt.Errorf("пользователь не найден"), fmt.Errorf("not found"), errors.ErrNotFound)
+		return nil, errors.New(fmt.Errorf("пользователь не найден"), errors.ErrNotFound, errors.ErrNotFound)
 	}
 	return user, nil
 }
@@ -51,6 +52,7 @@ func (userModel) CreateByVKUser(vkUser vkutil.User) (*User, error) {
 		LastName:  vkUser.LastName,
 		VkId:      int64(vkUser.Id),
 		AvatarUrl: vkUser.Photo200,
+		CreatedAt: ptypes.TimestampNow(),
 	}
 	_, err := db.Insert(&user)
 	return &user, err
