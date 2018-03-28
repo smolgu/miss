@@ -42,7 +42,7 @@ func CheckTyped(err error, typed error) bool {
 	if e, ok := err.(Error); ok {
 		return e.Typed() == typed
 	}
-	return false
+	return err == typed
 }
 
 //

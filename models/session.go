@@ -30,22 +30,22 @@ func (sessionModel) New(userID int64) (string, error) {
 		UserID: userID,
 	})
 
-	return token.SignedString(setting.App.Secret)
+	return token.SignedString([]byte(setting.App.Secret))
 }
 
 func (sessionModel) Check(sessionID string) (int64, error) {
-	token, err := jwt.Parse(sessionID, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(sessionID, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return setting.App.Secret, nil
+		return []byte(setting.App.Secret), nil
 	})
 	if err != nil {
 		return 0, errors.New(fmt.Errorf("Авторизация не действительна"), pkgErrors.Wrap(err, "parse jwt token"))
 	}
 
-	if claims, ok := token.Claims.(Claims); ok {
+	if claims, ok := token.Claims.(*Claims); ok {
 		if token.Valid {
 			return claims.UserID, nil
 		}

@@ -110,7 +110,7 @@ func (srv server) VkAuth(ctx context.Context, req *models.VkAuthRequest) (*model
 	}
 	user, err := models.Users.GetByVkID(vkID)
 	if err != nil {
-		if err == errors.NotFound {
+		if err == errors.ErrNotFound {
 			return srv.VkRegistre(ctx, req)
 		}
 		return nil, err
