@@ -23,7 +23,7 @@ func (u User) ObjectType() ObjectType {
 
 func (userModel) Get(userID int64) (*User, error) {
 	u := new(User)
-	has, err := db.Id(userID).Get(&u)
+	has, err := db.Id(userID).Get(u)
 	if err != nil {
 		return nil, errors.New(fmt.Errorf("Неизвестная ошибка"), pkgErrors.Wrap(err, "get user from db"))
 	}
