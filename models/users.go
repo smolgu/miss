@@ -1,9 +1,12 @@
 package models
 
 import (
-	"github.com/zhuharev/vkutil"
+	"fmt"
 
 	"github.com/smolgu/miss/pkg/errors"
+
+	pkgErrors "github.com/pkg/errors"
+	"github.com/zhuharev/vkutil"
 )
 
 type userModel int
@@ -19,7 +22,15 @@ func (u User) ObjectType() ObjectType {
 }
 
 func (userModel) Get(userID int64) (*User, error) {
-	return nil, nil
+	u := new(User)
+	has, err := db.Id(userID).Get(&u)
+	if err != nil {
+		return nil, errors.New(fmt.Errorf("Неизвестная ошибка"), pkgErrors.Wrap(err, "get user from db"))
+	}
+	if !has {
+		return nil, errors.New(fmt.Errorf("Пользователь не найден"), pkgErrors.Wrapf(err, "user not found user_id=%d", userID), errors.ErrNotFound)
+	}
+	return u, nil
 }
 
 func (userModel) GetByVkID(vkID int64) (*User, error) {
