@@ -106,7 +106,7 @@
       }
     },
     "/api/v1/users/{user_id}/vote": {
-      "post": {
+      "get": {
         "summary": "Vote vote for user",
         "operationId": "Vote",
         "responses": {
@@ -124,6 +124,24 @@
             "required": true,
             "type": "string",
             "format": "int64"
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "vote_type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "vote_none",
+              "dislike",
+              "like"
+            ],
+            "default": "vote_none"
           }
         ],
         "tags": [

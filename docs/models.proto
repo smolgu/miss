@@ -176,7 +176,7 @@ service Love {
   // Vote vote for user
   rpc Vote (VoteRequest) returns (VoteReply) {
     option (google.api.http) = {
-      post: "/api/v1/users/{user_id}/vote"
+      get: "/api/v1/users/{user_id}/vote"
     };
   }
   // Vote vote for user
