@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/golang/protobuf/ptypes"
+	"github.com/smolgu/miss/pkg/errors"
+
 	pkgErrors "github.com/pkg/errors"
 	"github.com/zhuharev/vkutil"
-
-	"github.com/smolgu/miss/pkg/errors"
 )
 
 type userModel int

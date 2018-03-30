@@ -131,13 +131,13 @@ func (srv server) VkRegistre(ctx context.Context, req *models.VkAuthRequest) (*m
 	return srv.vkAuth(ctx, req, user)
 }
 
-// User return user info by their id
+// GetUser return user info by their id
 func (server) GetUser(ctx context.Context, req *models.UserRequest) (*models.User, error) {
 	userID := req.GetUserId()
 	return models.Users.Get(userID)
 }
 
-// User return list of users
+// RandomUsers return list of users
 func (server) RandomUsers(_ context.Context, req *models.RandomRequest) (*models.UsersReply, error) {
 	validate := validator.New()
 	errs := validate.Struct(req)
