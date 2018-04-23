@@ -20,6 +20,7 @@ var Dev bool
 var App struct {
 	Vk struct {
 		ServiceToken string `yaml:"service_token"`
+		AppID        int    `yaml:"app_id"`
 	} `yaml:"vk"`
 	DataPath string `yaml:"data_path"`
 	Secret   string

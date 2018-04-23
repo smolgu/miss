@@ -9,15 +9,16 @@ import (
 	"os"
 	"time"
 
-	"github.com/go-playground/validator"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/urfave/cli"
-	"google.golang.org/grpc"
-
+	"github.com/smolgu/miss/cmd"
 	"github.com/smolgu/miss/models"
 	"github.com/smolgu/miss/pkg/errors"
 	"github.com/smolgu/miss/pkg/setting"
 	"github.com/smolgu/miss/pkg/vk"
+
+	"github.com/go-playground/validator"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/urfave/cli"
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -31,6 +32,10 @@ func main() {
 				Name:  "config",
 				Value: "conf/app.yaml",
 			},
+		},
+		Commands: []cli.Command{
+			cmd.Photos,
+			cmd.Profile,
 		},
 	}
 
@@ -47,6 +52,8 @@ func run(ctx *cli.Context) {
 	if err != nil {
 		log.Fatalf("err setting.NewContext: %s", err)
 	}
+
+	log.Printf("auth url: %s", vk.AuthURL())
 
 	err = models.NewContext()
 	if err != nil {
@@ -65,6 +72,7 @@ func runGRPCServer() {
 	}
 	grpcServer := grpc.NewServer()
 	models.RegisterLoveServer(grpcServer, &server{})
+
 	grpcServer.Serve(lis)
 }
 
@@ -99,6 +107,7 @@ func (srv server) vkAuth(ctx context.Context, req *models.VkAuthRequest, user *m
 	}
 	return &models.VkAuthReply{
 		Token: sessionID,
+		User:  user,
 	}, nil
 }
 
@@ -120,7 +129,7 @@ func (srv server) VkAuth(ctx context.Context, req *models.VkAuthRequest) (*model
 }
 
 func (srv server) VkRegistre(ctx context.Context, req *models.VkAuthRequest) (*models.VkAuthReply, error) {
-	vkUser, err := vk.GetUser(req.GetVkToken(), 0, true)
+	vkUser, err := vk.GetUser(req.GetVkToken(), 0)
 	if err != nil {
 		return nil, err
 	}

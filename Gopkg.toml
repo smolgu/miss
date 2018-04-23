@@ -24,13 +24,26 @@
 #   go-tests = true
 #   unused-packages = true
 
-[metadata.heroku]
-  root-package = "github.com/smolgu/miss"
-  go-version = "go1.10"
 
 [[constraint]]
-  name = "github.com/asdine/storm"
-  version = "2.1.0"
+  branch = "master"
+  name = "github.com/cenkalti/dominantcolor"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/corona10/goimagehash"
+
+[[constraint]]
+  name = "github.com/dgrijalva/jwt-go"
+  version = "3.2.0"
+
+[[constraint]]
+  name = "github.com/go-playground/validator"
+  version = "9.13.0"
+
+[[constraint]]
+  name = "github.com/go-xorm/xorm"
+  version = "0.6.4"
 
 [[constraint]]
   name = "github.com/golang/protobuf"
@@ -42,6 +55,26 @@
 
 [[constraint]]
   branch = "master"
+  name = "github.com/lib/pq"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/muesli/smartcrop"
+
+[[constraint]]
+  name = "github.com/pkg/errors"
+  version = "0.8.0"
+
+[[constraint]]
+  name = "github.com/urfave/cli"
+  version = "1.20.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/zhuharev/vkutil"
+
+[[constraint]]
+  branch = "master"
   name = "golang.org/x/net"
 
 [[constraint]]
@@ -50,7 +83,11 @@
 
 [[constraint]]
   name = "google.golang.org/grpc"
-  version = "1.10.0"
+  version = "1.11.1"
+
+[[constraint]]
+  name = "gopkg.in/yaml.v2"
+  version = "2.2.1"
 
 [prune]
   go-tests = true

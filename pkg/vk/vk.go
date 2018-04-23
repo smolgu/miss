@@ -4,24 +4,23 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/zhuharev/vkutil"
-
 	"github.com/smolgu/miss/pkg/errors"
+
+	"github.com/zhuharev/vkutil"
 )
 
 // GetUser returns info about user by id
-func GetUser(token string, vkID int64, withAvatars ...bool) (user vkutil.User, err error) {
+func GetUser(token string, vkID int64) (user vkutil.User, err error) {
 	var (
-		u             = vkutil.New()
-		res           []vkutil.User
-		withAvatarURL = len(withAvatars) > 0 && withAvatars[0]
+		u   = vkutil.New()
+		res []vkutil.User
 	)
+	u.SetDebug(true)
+	const fields = "photo_200,sex,followers_count,counters"
 	u.VkApi.AccessToken = token
 	u.VkApi.Lang = "ru"
 	params := url.Values{}
-	if withAvatarURL {
-		params.Set("fields", "photo_200")
-	}
+	params.Set("fields", fields)
 	res, err = u.UsersGet(vkID, params)
 	if err != nil {
 		err = errors.New(fmt.Errorf("ошибка соединения с ВКонтакте. Попробуйте позже"),
@@ -38,7 +37,7 @@ func GetUser(token string, vkID int64, withAvatars ...bool) (user vkutil.User, e
 
 // UserGetByToken get info about user by token
 func UserGetByToken(token string, withAvatarURL bool) (user vkutil.User, err error) {
-	return GetUser(token, 0, withAvatarURL)
+	return GetUser(token, 0)
 }
 
 // CheckToken return user id of vk.com user

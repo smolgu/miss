@@ -14,23 +14,20 @@
   version = "v1.0.0"
 
 [[projects]]
-  name = "github.com/asdine/storm"
-  packages = [
-    ".",
-    "codec",
-    "codec/json",
-    "index",
-    "internal",
-    "q"
-  ]
-  revision = "a86fa5e09c9c50a06416b08fd9acd4839fb2d62e"
-  version = "v2.1.0"
+  branch = "master"
+  name = "github.com/cenkalti/dominantcolor"
+  packages = ["."]
+  revision = "df772e8dd39e301b81929ecd1c0a09981a639ec1"
 
 [[projects]]
-  name = "github.com/coreos/bbolt"
-  packages = ["."]
-  revision = "583e8937c61f1af6513608ccc75c97b6abdf4ff9"
-  version = "v1.3.0"
+  branch = "master"
+  name = "github.com/corona10/goimagehash"
+  packages = [
+    ".",
+    "etcs",
+    "transforms"
+  ]
+  revision = "7f23d56ee5d6e8aa45854868c8596932578337f2"
 
 [[projects]]
   name = "github.com/dgrijalva/jwt-go"
@@ -43,6 +40,27 @@
   packages = ["."]
   revision = "507f6050b8568533fb3f5504de8e5205fa62a114"
   version = "v1.6.0"
+
+[[projects]]
+  name = "github.com/go-playground/locales"
+  packages = [
+    ".",
+    "currency"
+  ]
+  revision = "f63010822830b6fe52288ee52d5a1151088ce039"
+  version = "v0.12.1"
+
+[[projects]]
+  name = "github.com/go-playground/universal-translator"
+  packages = ["."]
+  revision = "b32fa301c9fe55953584134cb6853a13c87ec0a1"
+  version = "v0.16.0"
+
+[[projects]]
+  name = "github.com/go-playground/validator"
+  packages = ["."]
+  revision = "8ce234ff024d85b3848e485decba806385d6e276"
+  version = "v9.13.0"
 
 [[projects]]
   branch = "master"
@@ -94,7 +112,7 @@
     ".",
     "oid"
   ]
-  revision = "b2004221932bd6b13167ef654c81cffac36f7537"
+  revision = "d34b9ff171c21ad295489235aec8b6626023cd04"
 
 [[projects]]
   name = "github.com/mattn/go-colorable"
@@ -107,6 +125,22 @@
   packages = ["."]
   revision = "0360b2af4f38e8d38c7fce2a9f4e702702d73a39"
   version = "v0.0.3"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/muesli/smartcrop"
+  packages = [
+    ".",
+    "nfnt",
+    "options"
+  ]
+  revision = "f6ebaa786a12a0fdb2d7c6dee72808e68c296464"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/nfnt/resize"
+  packages = ["."]
+  revision = "83c6a9932646f83e3267f353373d47347b6036b2"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -136,7 +170,16 @@
   branch = "master"
   name = "github.com/zhuharev/vkutil"
   packages = ["."]
-  revision = "61a3f35c250c6b23630f1d90665c887b6fa4cef5"
+  revision = "1958b02573dddcc4a657bafe2e78de5deededc0d"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/image"
+  packages = [
+    "draw",
+    "math/f64"
+  ]
+  revision = "f315e440302883054d0c2bd85486878cb4f8572c"
 
 [[projects]]
   branch = "master"
@@ -152,13 +195,13 @@
     "lex/httplex",
     "trace"
   ]
-  revision = "6078986fec03a1dcc236c34816c71b0e05018fda"
+  revision = "b68f30494add4df6bd8ef5e82803f308e7f7c59c"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "91ee8cde435411ca3f1cd365e8f20131aed4d0a1"
+  revision = "378d26f46672a356c46195c28f61bdb4c0a781dd"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -188,7 +231,7 @@
     "googleapis/api/annotations",
     "googleapis/rpc/status"
   ]
-  revision = "ab0870e398d5dd054b868c0db1481ab029b9a9f2"
+  revision = "35de2414665fc36f56b72d982c5af480d86de5ab"
 
 [[projects]]
   name = "google.golang.org/grpc"
@@ -217,18 +260,18 @@
     "tap",
     "transport"
   ]
-  revision = "8e4536a86ab602859c20df5ebfd0bd4228d08655"
-  version = "v1.10.0"
+  revision = "1e2570b1b19ade82d8dbb31bba4e65e9f9ef5b34"
+  version = "v1.11.1"
 
 [[projects]]
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "7f97868eec74b32b0982dd158a51a446d1da7eb5"
-  version = "v2.1.1"
+  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
+  version = "v2.2.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "bb1bf027fcaa3738dfbf46ff1b74160b043497a9fa499cc971d28d4fd7b52491"
+  inputs-digest = "8122f689700c16621a693106d3f6615bf8d732a94c5675f6ce942810adea1a14"
   solver-name = "gps-cdcl"
   solver-version = 1
