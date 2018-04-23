@@ -24,6 +24,20 @@
 #   go-tests = true
 #   unused-packages = true
 
+[prune]
+  non-go = true
+  go-tests = true
+  unused-packages = true
+
+[metadata.heroku]
+  root-package = "github.com/smolgu/miss"
+  go-version = "go1.10.1"
+  install = ["."]
+  ensure = "false"
+
+[[override]]
+  name = "github.com/Unknwon/com"
+  branch = "master"
 
 [[constraint]]
   branch = "master"
@@ -88,7 +102,3 @@
 [[constraint]]
   name = "gopkg.in/yaml.v2"
   version = "2.2.1"
-
-[prune]
-  go-tests = true
-  unused-packages = true
