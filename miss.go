@@ -53,8 +53,6 @@ func run(ctx *cli.Context) {
 		log.Fatalf("err setting.NewContext: %s", err)
 	}
 
-	log.Printf("auth url: %s", vk.AuthURL())
-
 	err = models.NewContext()
 	if err != nil {
 		log.Fatalf("err models.NewContext: %s", err)
