@@ -31,7 +31,7 @@
 
 [metadata.heroku]
   root-package = "github.com/smolgu/miss"
-  go-version = "go1.10.1"
+  go-version = "go1.10"
   install = ["."]
   ensure = "false"
 
