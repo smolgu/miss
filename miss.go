@@ -64,6 +64,7 @@ func run(ctx *cli.Context) {
 }
 
 func runGRPCServer() {
+	log.Printf("listn grpc at :4455")
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", 4455))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -88,6 +89,7 @@ func runProxy() {
 		return
 	}
 
+	log.Printf("start listen proxy at :8080")
 	if err := http.ListenAndServe(":8080", mux); err != nil {
 		panic(err)
 	}
